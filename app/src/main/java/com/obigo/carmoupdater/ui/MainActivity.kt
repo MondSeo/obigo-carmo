@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.Observer
 import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.BuildConfig
 import com.github.javiersantos.appupdater.enums.UpdateFrom
@@ -19,9 +21,14 @@ import kotlin.math.absoluteValue
 
 
 class MainActivity : AppCompatActivity() {
-
+    val viewModel : MainViewModel by viewModels()
     private lateinit var binding : ActivityMainBinding
     private lateinit var station : ArrayList<String>
+
+    private val recentVersionObserver : Observer<String> = Observer {
+        binding.recentVersion.text = it
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +39,6 @@ class MainActivity : AppCompatActivity() {
         initViews()
         initDatas()
         displayStationsPager(station)
-
-
     }
 
     override fun onStart() {
@@ -83,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.currentVersion.text = "현재 버전 : ${BuildConfig.VERSION_NAME}"
+        viewModel.recentVersion.observe(this,recentVersionObserver)
 
     }
 
@@ -103,7 +109,6 @@ class MainActivity : AppCompatActivity() {
             if (windowInsets.isVisible(WindowInsetsCompat.Type.navigationBars())
                 || windowInsets.isVisible(WindowInsetsCompat.Type.statusBars())) {
                 windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-
             } else {
                 windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
             }
