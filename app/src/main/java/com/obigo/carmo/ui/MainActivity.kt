@@ -1,9 +1,10 @@
-package com.obigo.carmoupdater.ui
+package com.obigo.carmo.ui
 
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import android.provider.Settings.ACTION_SETTINGS
+import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -11,16 +12,14 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
-import com.github.javiersantos.appupdater.AppUpdater
-import com.github.javiersantos.appupdater.BuildConfig
-import com.github.javiersantos.appupdater.enums.UpdateFrom
-import com.obigo.carmo.ui.StationPagerAdapter
-import com.obigo.carmoupdater.R
-import com.obigo.carmoupdater.databinding.ActivityMainBinding
+import com.obigo.carmo.BuildConfig
+import com.obigo.carmo.OnClickCountListener
+import com.obigo.databinding.ActivityMainBinding
 import kotlin.math.absoluteValue
 
 
 class MainActivity : AppCompatActivity() {
+
     val viewModel : MainViewModel by viewModels()
     private lateinit var binding : ActivityMainBinding
     private lateinit var station : ArrayList<String>
@@ -39,14 +38,12 @@ class MainActivity : AppCompatActivity() {
         initViews()
         initDatas()
         displayStationsPager(station)
+
     }
 
     override fun onStart() {
         super.onStart()
-        val appUpdater = AppUpdater(this)
-            .setUpdateFrom(UpdateFrom.GITHUB)
-            .setGitHubUserAndRepo("mondseo","obigo-carmo-updater")
-        appUpdater.start()
+
     }
 
     private fun initDatas() {
@@ -66,11 +63,11 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         return
     }
-
-    override fun onStop() {
-        super.onStop()
-        startActivity(Intent(this, MainActivity::class.java))
-    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        startActivity(Intent(this, MainActivity::class.java))
+//    }
 
     private fun initViews() {
         binding.viewPager.setPageTransformer { page, position ->
@@ -88,7 +85,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.currentVersion.text = "현재 버전 : ${BuildConfig.VERSION_NAME}"
+
+        viewModel.appUpdaterUtils.start()
         viewModel.recentVersion.observe(this,recentVersionObserver)
+        viewModel.appUpdater.start()
+
+        binding.hiddenSettingView.setOnClickListener(object : OnClickCountListener(){
+            override fun onCountClick(view: View) {
+                val intent = Intent(ACTION_SETTINGS)
+                startActivity(intent)
+            }
+
+        })
+
 
     }
 
@@ -106,12 +115,7 @@ class MainActivity : AppCompatActivity() {
             // You can hide the caption bar even when the other system bars are visible.
             // To account for this, explicitly check the visibility of navigationBars()
             // and statusBars() rather than checking the visibility of systemBars().
-            if (windowInsets.isVisible(WindowInsetsCompat.Type.navigationBars())
-                || windowInsets.isVisible(WindowInsetsCompat.Type.statusBars())) {
-                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-            } else {
-                windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
-            }
+            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             view.onApplyWindowInsets(windowInsets)
         }
     }

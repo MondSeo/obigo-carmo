@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
+    android:layout_height="match_parent">
 
     <TextView
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/currentVersion"
@@ -14,11 +14,13 @@
         />
 
     <TextView
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recentVersion"
         android:layout_below="@id/currentVersion"
         android:textAlignment="center"
+        android:text="최신 버전 : 1.0"
         />
 
 
@@ -28,4 +30,10 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/recentVersion"/>
 
+    <View
+        android:id="@+id/hidden_setting_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        />
 </RelativeLayout>

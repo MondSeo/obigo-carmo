@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'com.obigo.carmoupdater'
+    namespace 'com.obigo'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.obigo.carmoupdater"
+        applicationId "com.obigo"
         minSdk 23
         targetSdk 33
         versionCode 1
-        versionName "1.1"
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,4 +1,4 @@
-package com.obigo.carmoupdater
+package com.obigo.carmo
 
 import org.junit.Test
 
