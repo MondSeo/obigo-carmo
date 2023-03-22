@@ -1,32 +1,22 @@
 package com.obigo.carmo.ui
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.ACTION_SETTINGS
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import com.github.javiersantos.appupdater.AppUpdater
-import com.github.javiersantos.appupdater.AppUpdaterUtils
-import com.github.javiersantos.appupdater.enums.AppUpdaterError
+import com.github.javiersantos.appupdater.BuildConfig
 import com.github.javiersantos.appupdater.enums.UpdateFrom
-import com.github.javiersantos.appupdater.objects.Update
-import com.obigo.carmo.BuildConfig
 import com.obigo.carmo.OnClickCountListener
-import com.obigo.carmo.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import com.obigo.databinding.ActivityMainBinding
 import kotlin.math.absoluteValue
 
 
