@@ -1,20 +1,32 @@
 package com.obigo.carmo.ui
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.ACTION_SETTINGS
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
+import com.github.javiersantos.appupdater.AppUpdater
+import com.github.javiersantos.appupdater.AppUpdaterUtils
+import com.github.javiersantos.appupdater.enums.AppUpdaterError
+import com.github.javiersantos.appupdater.enums.UpdateFrom
+import com.github.javiersantos.appupdater.objects.Update
 import com.obigo.carmo.BuildConfig
 import com.obigo.carmo.OnClickCountListener
-import com.obigo.databinding.ActivityMainBinding
+import com.obigo.carmo.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlin.math.absoluteValue
 
 
@@ -23,10 +35,13 @@ class MainActivity : AppCompatActivity() {
     val viewModel : MainViewModel by viewModels()
     private lateinit var binding : ActivityMainBinding
     private lateinit var station : ArrayList<String>
+    private lateinit var appUpdater: AppUpdater
 
     private val recentVersionObserver : Observer<String> = Observer {
         binding.recentVersion.text = it
     }
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -35,11 +50,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setImmersiveMode()
+        initUpdater()
         initViews()
         initDatas()
         displayStationsPager(station)
 
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -88,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.appUpdaterUtils.start()
         viewModel.recentVersion.observe(this,recentVersionObserver)
-        viewModel.appUpdater.start()
+        appUpdater.start()
 
         binding.hiddenSettingView.setOnClickListener(object : OnClickCountListener(){
             override fun onCountClick(view: View) {
@@ -126,5 +143,22 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.setCurrentItem(adapter.itemCount / 2, false)
     }
 
+    private fun initUpdater() {
+        appUpdater = AppUpdater(this@MainActivity)
+            .setUpdateFrom(UpdateFrom.GITHUB)
+            .setButtonUpdateClickListener { dialog, which ->
+
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.component = viewModel.componentName
+                intent.putExtra("url",viewModel.url)
+                startActivity(intent)
+//                moveTaskToBack(true);						// 태스크를 백그라운드로 이동
+//                finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
+//                android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스
+
+            }
+            .setGitHubUserAndRepo("MondSeo","obigo-carmo")
+    }
 
 }
