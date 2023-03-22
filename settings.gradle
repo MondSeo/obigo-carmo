@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 
 }
-rootProject.name = "CarmoUpdater"
+rootProject.name = "Carmo"
 include ':app'
