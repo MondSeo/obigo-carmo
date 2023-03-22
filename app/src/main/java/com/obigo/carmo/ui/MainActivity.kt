@@ -13,26 +13,24 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import com.github.javiersantos.appupdater.AppUpdater
-import com.github.javiersantos.appupdater.BuildConfig
 import com.github.javiersantos.appupdater.enums.UpdateFrom
+import com.obigo.BuildConfig
 import com.obigo.carmo.OnClickCountListener
+
 import com.obigo.databinding.ActivityMainBinding
 import kotlin.math.absoluteValue
 
 
 class MainActivity : AppCompatActivity() {
 
-    val viewModel : MainViewModel by viewModels()
-    private lateinit var binding : ActivityMainBinding
-    private lateinit var station : ArrayList<String>
+    val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var station: ArrayList<String>
     private lateinit var appUpdater: AppUpdater
 
-    private val recentVersionObserver : Observer<String> = Observer {
+    private val recentVersionObserver: Observer<String> = Observer {
         binding.recentVersion.text = it
     }
-
-
-
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,13 +42,6 @@ class MainActivity : AppCompatActivity() {
         initViews()
         initDatas()
         displayStationsPager(station)
-
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-
     }
 
     private fun initDatas() {
@@ -86,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                     page.alpha = 1F
                 }
                 else -> {
-                    page.alpha = 1F - position.absoluteValue*2
+                    page.alpha = 1F - position.absoluteValue * 2
                 }
             }
         }
@@ -94,10 +85,10 @@ class MainActivity : AppCompatActivity() {
         binding.currentVersion.text = "현재 버전 : ${BuildConfig.VERSION_NAME}"
 
         viewModel.appUpdaterUtils.start()
-        viewModel.recentVersion.observe(this,recentVersionObserver)
+        viewModel.recentVersion.observe(this, recentVersionObserver)
         appUpdater.start()
 
-        binding.hiddenSettingView.setOnClickListener(object : OnClickCountListener(){
+        binding.hiddenSettingView.setOnClickListener(object : OnClickCountListener() {
             override fun onCountClick(view: View) {
                 val intent = Intent(ACTION_SETTINGS)
                 startActivity(intent)
@@ -109,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    private fun setImmersiveMode(){
+    private fun setImmersiveMode() {
         val windowInsetsController =
             WindowCompat.getInsetsController(window, window.decorView)
         // Configure the behavior of the hidden system bars.
@@ -127,11 +118,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayStationsPager(station:List<String>) {
+    private fun displayStationsPager(station: List<String>) {
         val adapter = StationPagerAdapter(station)
         binding.viewPager.adapter = adapter
         binding.viewPager.setCurrentItem(adapter.itemCount / 2, false)
     }
+
+
 
     private fun initUpdater() {
         appUpdater = AppUpdater(this@MainActivity)
@@ -143,12 +136,14 @@ class MainActivity : AppCompatActivity() {
                 intent.component = viewModel.componentName
                 intent.putExtra("url",viewModel.url)
                 startActivity(intent)
-//                moveTaskToBack(true);						// 태스크를 백그라운드로 이동
-//                finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
-//                android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스
+                moveTaskToBack(true);						// 태스크를 백그라운드로 이동
+                finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
+                android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스
 
             }
-            .setGitHubUserAndRepo("MondSeo","obigo-carmo")
+            .setGitHubUserAndRepo("MondSeo", "obigo-carmo")
     }
+
+
 
 }
