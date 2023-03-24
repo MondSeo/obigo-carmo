@@ -16,8 +16,8 @@ import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.UpdateFrom
 import com.obigo.BuildConfig
 import com.obigo.carmo.OnClickCountListener
+import com.obigo.carmo.databinding.ActivityMainBinding
 
-import com.obigo.databinding.ActivityMainBinding
 import kotlin.math.absoluteValue
 
 

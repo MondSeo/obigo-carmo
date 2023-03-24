@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.obigo'
+    namespace 'com.obigo.carmo'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.obigo"
+        applicationId "com.obigo.carmo"
         minSdk 23
         targetSdk 33
         versionCode 1
