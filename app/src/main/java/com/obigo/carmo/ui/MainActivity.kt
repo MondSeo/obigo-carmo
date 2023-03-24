@@ -13,8 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import com.github.javiersantos.appupdater.AppUpdater
+import com.github.javiersantos.appupdater.BuildConfig
 import com.github.javiersantos.appupdater.enums.UpdateFrom
-import com.obigo.BuildConfig
 import com.obigo.carmo.OnClickCountListener
 import com.obigo.carmo.databinding.ActivityMainBinding
 
