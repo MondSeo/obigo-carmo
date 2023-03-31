@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Carmo</string>
+    <string name="defaultRecentVersion">최신 버전 :  -  </string>
 </resources>

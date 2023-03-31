@@ -6,29 +6,30 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/currentVersion"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         />
 
     <TextView
+        android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recentVersion"
         android:layout_below="@id/currentVersion"
-        android:textAlignment="center"
-        android:text="최신 버전 : 1.0"
+        android:textAlignment="textStart"
+        android:text="@string/defaultRecentVersion"
         />
 
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+    <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/recentVersion"/>
+
 
     <View
         android:id="@+id/hidden_setting_view"
@@ -36,4 +37,15 @@
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         />
+
+    <Spinner
+        android:id="@+id/spinner_animations"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:spinnerMode="dropdown"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:layout_below="@+id/hidden_setting_view"
+        />
+
 </RelativeLayout>

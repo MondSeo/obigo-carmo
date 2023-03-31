@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="animations">
+        <item>애니메이션 1</item>
+        <item>애니메이션 2</item>
+        <item>애니메이션 3</item>
+        <item>애니메이션 4</item>
+        <item>애니메이션 5</item>
+        <item>애니메이션 6</item>
+        <item>애니메이션 7</item>
+    </string-array>
+</resources>
