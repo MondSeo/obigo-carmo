@@ -33,13 +33,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * 바인딩
      */
-
     private lateinit var binding: ActivityMainBinding
-    /**
-     * 정류장을 나타낼 ArrayList
-     */
-
-    private lateinit var station: ArrayList<String>
 
     /**
      * 애니메이션 항목 Array
@@ -57,20 +51,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appUpdater: AppUpdater
 
     /**
-     * 현재 드랍다운에 클릭된 애니메이션
-     */
-    private lateinit var selectedAniamtion : String
-
-    /**
-     * 애니메이션 함수 클래스
-     */
-    private val animationFunctions = AnimationFunctions(this@MainActivity)
-
-    /**
      * 최근 버전 옵저버
      */
     private val recentVersionObserver: Observer<String> = Observer {
         binding.recentVersion.text = it
+    }
+
+    /**
+     * 현재 정류장 옵저버
+     */
+    private val currentStationObserver : Observer<String> = Observer {
+        binding.tvStations.text = it
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -80,30 +71,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setImmersiveMode()
         initUpdateCheck()
-        initDatas()
+        initDropDown()
         initViews()
     }
 
     /**
-     * 데이터 세팅
+     * 드롭다운 세팅
      */
-    private fun initDatas() {
-        station = ArrayList()
-        station.apply {
-            station.add("버스 정류장1")
-            station.add("버스 정류장2")
-            station.add("버스 정류장3")
-            station.add("버스 정류장4")
-            station.add("버스 정류장5")
-            station.add("버스 정류장6")
-            station.add("버스 정류장7")
-            station.add("버스 정류장8")
-        }
-
+    private fun initDropDown() {
         animation  = resources.getStringArray(R.array.animations)
         animationDropDownAdapter = ArrayAdapter(this, R.layout.item_spinner_animation,animation)
-        selectedAniamtion = animation[0]
-
         binding.spinnerAnimations.adapter = animationDropDownAdapter
     }
 
@@ -122,9 +99,16 @@ class MainActivity : AppCompatActivity() {
         binding.currentVersion.text = "현재 버전 : ${BuildConfig.VERSION_NAME}"
 
         viewModel.appUpdaterUtils.start()
+        viewModel.initData()
+        viewModel.stationMoving(binding.tvStations)
         viewModel.recentVersion.observe(this, recentVersionObserver)
+        viewModel.currentStation.observe(this, currentStationObserver)
         appUpdater.start()
+        binding.tvStations.isSelected = true
 
+        /**
+         * 3초안에 10번 클릭 시 설정화면 들어가지는 버튼
+         */
         binding.hiddenSettingView.setOnClickListener(object : OnHiddenClickCountListener() {
             override fun onCountClick(view: View) {
                 val intent = Intent(ACTION_SETTINGS)
@@ -133,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         /**
-         * private fun 하나 만들고 position 별로 인자 커스텀해서 애니메이션 뿌려주는 함수 생성
+         * 드랍다운 리스너
          */
         binding.spinnerAnimations.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
@@ -142,14 +126,10 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ){
-                selectedAniamtion = animation[position]
-                Log.d(TAG,selectedAniamtion)
-//                animationFunctions.startSampleAnimation()
+                viewModel.selectedAnimation = position
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-
-
     }
 
     /**
@@ -159,16 +139,12 @@ class MainActivity : AppCompatActivity() {
     private fun setImmersiveMode() {
         val windowInsetsController =
             WindowCompat.getInsetsController(window, window.decorView)
-        // Configure the behavior of the hidden system bars.
+
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
-        // Add a listener to update the behavior of the toggle fullscreen button when
-        // the system bars are hidden or revealed.
         window.decorView.setOnApplyWindowInsetsListener { view, windowInsets ->
-            // You can hide the caption bar even when the other system bars are visible.
-            // To account for this, explicitly check the visibility of navigationBars()
-            // and statusBars() rather than checking the visibility of systemBars().
+
             windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
             view.onApplyWindowInsets(windowInsets)
         }
@@ -187,9 +163,9 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("url",viewModel.url)
                 intent.putExtra("version",viewModel.latestVersion)
                 startActivity(intent)
-                moveTaskToBack(true);						// 태스크를 백그라운드로 이동
-                finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
-                android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
+                moveTaskToBack(true)					// 태스크를 백그라운드로 이동
+                finishAndRemoveTask()					// 액티비티 종료 + 태스크 리스트에서 지우기
+                android.os.Process.killProcess(android.os.Process.myPid())	// 앱 프로세스 종료
             }
             .setGitHubUserAndRepo("MondSeo", "obigo-carmo")
 

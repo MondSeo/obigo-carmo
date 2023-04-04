@@ -51,7 +51,7 @@ class NetworkConnection(private val context: Context) : LiveData<Boolean>()
     }
 
     /**
-     * 롤리팝 이상
+     * 디바이스 버전 체크
      */
     override fun onInactive()
     {
