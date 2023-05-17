@@ -1,23 +1,30 @@
-package com.obigo.carmo
+package com.obigo.carmo.home
 
 import android.content.Context
 import android.view.View
 import android.view.animation.AnimationUtils
+import com.obigo.carmo.home.ui.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * 애니메이션 집합 클래스
  */
-class AnimationFunctions(val context: Context)  {
+class AnimationFunctions(private val context: Context, private val mainViewModel: MainViewModel)  {
 
     private fun startAnimationTornado(view : View){
         AnimationUtils.loadAnimation(context, R.anim.anim_tornado).also { hyperspaceJumpAnimation ->
             hyperspaceJumpAnimation.isFillEnabled = false
             view.startAnimation(hyperspaceJumpAnimation)
+
         }
     }
 
     private fun startAnimationTranslate(view: View){
-        AnimationUtils.loadAnimation(context, R.anim.anim_translate_fromcenter_toright).also { hyperspaceJumpAnimation ->
+
+        AnimationUtils.loadAnimation(context,
+            R.anim.anim_translate_fromcenter_toright
+        ).also { hyperspaceJumpAnimation ->
             hyperspaceJumpAnimation.isFillEnabled = false
             view.startAnimation(hyperspaceJumpAnimation)
         }
@@ -81,36 +88,46 @@ class AnimationFunctions(val context: Context)  {
     /**
      * 드랍다운 애니메이션 변경
      */
-    fun dropDownAnimationChanged(view : View, position: Int){
+     fun dropDownAnimationChanged(view : View, position: Int){
         when(position){
             0 ->{
+                mainViewModel.animationPeriod = 3000
                 startAnimationTornado(view)
             }
             1 ->{
+                mainViewModel.animationPeriod = 3000
                 startAnimationTranslate(view)
             }
             2 -> {
+                mainViewModel.animationPeriod = 3000
                 startAnimationBlink(view)
             }
             3 -> {
+                mainViewModel.animationPeriod = 3000
                 startAnimationBounce(view)
             }
             4 -> {
+                mainViewModel.animationPeriod = 3000
                 startAnimationSlideUp(view)
             }
             5 -> {
+                mainViewModel.animationPeriod = 3000
                 startAnimationSlideDown(view)
             }
             6 -> {
+                mainViewModel.animationPeriod = 3000
                 startAnimationRotate(view)
             }
             7 -> {
+                mainViewModel.animationPeriod = 10000
                 startAnimationMarquee(view)
             }
             8 -> {
+                mainViewModel.animationPeriod = 3000
                 startAnimationFlip(view)
             }
             9 -> {
+                mainViewModel.animationPeriod = 3000
                 startAnimationTogether(view)
             }
         }

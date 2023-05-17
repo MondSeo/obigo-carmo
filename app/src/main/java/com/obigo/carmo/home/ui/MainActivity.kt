@@ -1,11 +1,9 @@
-package com.obigo.carmo.ui
+package com.obigo.carmo.home.ui
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.ACTION_SETTINGS
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -18,8 +16,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Observer
 import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.UpdateFrom
-import com.obigo.carmo.*
-import com.obigo.carmo.databinding.ActivityMainBinding
+import com.obigo.carmo.home.BuildConfig
+import com.obigo.carmo.home.NetworkConnection
+import com.obigo.carmo.home.OnHiddenClickCountListener
+import com.obigo.carmo.home.R
+import com.obigo.carmo.home.databinding.ActivityMainBinding
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -73,7 +75,10 @@ class MainActivity : AppCompatActivity() {
         initUpdateCheck()
         initDropDown()
         initViews()
+        initObserver()
+        initUpdater()
     }
+
 
     /**
      * 드롭다운 세팅
@@ -97,13 +102,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initViews() {
         binding.currentVersion.text = "현재 버전 : ${BuildConfig.VERSION_NAME}"
-
         viewModel.appUpdaterUtils.start()
         viewModel.initData()
-        viewModel.stationMoving(binding.tvStations)
-        viewModel.recentVersion.observe(this, recentVersionObserver)
-        viewModel.currentStation.observe(this, currentStationObserver)
-        appUpdater.start()
         binding.tvStations.isSelected = true
 
         /**
@@ -127,10 +127,23 @@ class MainActivity : AppCompatActivity() {
                 id: Long
             ){
                 viewModel.selectedAnimation = position
+                viewModel.animationFunctions.dropDownAnimationChanged(binding.tvStations, position)
+                viewModel.stationMoving(binding.tvStations)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
+
+    private fun initObserver() {
+        viewModel.recentVersion.observe(this, recentVersionObserver)
+        viewModel.currentStation.observe(this, currentStationObserver)
+    }
+
+
+    private fun initUpdater() {
+        appUpdater.start()
+    }
+
 
     /**
      * 몰입 모드
