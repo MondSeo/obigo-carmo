@@ -1,11 +1,10 @@
-package com.obigo.carmo.home
+package com.obigo.carmo.home.animation
 
 import android.content.Context
 import android.view.View
 import android.view.animation.AnimationUtils
+import com.obigo.carmo.home.R
 import com.obigo.carmo.home.ui.MainViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * 애니메이션 집합 클래스

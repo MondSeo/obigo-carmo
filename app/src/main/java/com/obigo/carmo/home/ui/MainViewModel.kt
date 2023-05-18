@@ -13,10 +13,9 @@ import com.github.javiersantos.appupdater.AppUpdaterUtils
 import com.github.javiersantos.appupdater.enums.AppUpdaterError
 import com.github.javiersantos.appupdater.enums.UpdateFrom
 import com.github.javiersantos.appupdater.objects.Update
-import com.obigo.carmo.home.AnimationFunctions
 import com.obigo.carmo.home.R
+import com.obigo.carmo.home.animation.AnimationFunctions
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     @SuppressLint("StaticFieldLeak")
@@ -101,6 +100,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         })
 
 
+
+
     /**
      * 가공 데이터
      */
@@ -131,6 +132,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     i = 0
                     _currentStation.postValue(station[i])
                 }
+                animationFunctions.dropDownAnimationChanged(view, selectedAnimation)
+                i++
+            }
+        }
+        timer = Timer()
+        timer.schedule(timerTask,0, animationPeriod)
+    }
+
+    fun carmoWindowMoving(view: View){
+        var i = 0
+        timer.cancel()
+        val timerTask = object : TimerTask(){
+            override fun run() {
                 animationFunctions.dropDownAnimationChanged(view, selectedAnimation)
                 i++
             }

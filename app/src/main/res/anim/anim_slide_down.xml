@@ -10,7 +10,7 @@
         android:toYScale="1.0" />
     <translate
         android:fromXDelta="0"
-        android:toXDelta="100%p"
+        android:toXDelta="200%p"
         android:startOffset="2000"
         android:duration="1000"
         android:repeatCount="1"

@@ -32,6 +32,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <service android:name="com.obigo.carmo.home.service.CarmoWindowService"/>
+        <receiver android:name="com.obigo.carmo.home.receiver.CarmoWindowNotificationReceiver"
+            android:enabled="true"/>
+
     </application>
 
 </manifest>

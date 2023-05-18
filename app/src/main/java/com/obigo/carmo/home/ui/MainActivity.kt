@@ -1,10 +1,15 @@
 package com.obigo.carmo.home.ui
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings.ACTION_SETTINGS
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
@@ -17,14 +22,17 @@ import androidx.lifecycle.Observer
 import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.UpdateFrom
 import com.obigo.carmo.home.BuildConfig
-import com.obigo.carmo.home.NetworkConnection
 import com.obigo.carmo.home.OnHiddenClickCountListener
 import com.obigo.carmo.home.R
 import com.obigo.carmo.home.databinding.ActivityMainBinding
+import com.obigo.carmo.home.service.CarmoWindowService
+import com.obigo.carmo.home.util.CarmoState
+import com.obigo.carmo.home.util.CarmoWindowRemote
+import com.obigo.carmo.home.util.CarmoWindowStateNotifier
+import com.obigo.carmo.home.util.NetworkConnection
 
 
-
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CarmoWindowStateNotifier {
 
 
     /**
@@ -66,6 +74,29 @@ class MainActivity : AppCompatActivity() {
         binding.tvStations.text = it
     }
 
+    /**
+     * CarmoWindow 서비스
+     */
+    private val carmoWindowService : CarmoWindowService?
+        get() = CarmoWindowRemote.carmoWindowService
+
+    private var serviceToken: CarmoWindowRemote.ServiceToken? = null
+
+    //투명 윈도우 임시 클릭 리스너 : CarmoWindowRemote를 어떠한 상황이든 오브젝트 단으로 호출함으로써 아이 하차, 반려동물 대기 등의 상황에 대응할 수 있게 만듦
+    private val setOnClickListener = OnClickListener { view ->
+        when(view){
+            binding.btnChildQuit -> {
+                CarmoWindowRemote.changeStateChildQuit()
+            }
+            binding.btnPetIdle -> {
+                CarmoWindowRemote.changeStatePetIdle()
+            }
+            binding.btnQuit -> {
+                CarmoWindowRemote.changeStateQuit()
+            }
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,9 +107,18 @@ class MainActivity : AppCompatActivity() {
         initDropDown()
         initViews()
         initObserver()
+        startCarmoWindowService(this@MainActivity)
         initUpdater()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+
+        if(carmoWindowService != null){
+            carmoWindowService!!.setCarmoWindowStateCallback(this)
+        }
+    }
 
     /**
      * 드롭다운 세팅
@@ -132,6 +172,13 @@ class MainActivity : AppCompatActivity() {
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
+        binding.tvStations.scaleX = 5.0F
+        binding.tvStations.scaleY = 5.0F
+
+        binding.btnChildQuit.setOnClickListener(setOnClickListener)
+        binding.btnPetIdle.setOnClickListener(setOnClickListener)
+        binding.btnQuit.setOnClickListener(setOnClickListener)
     }
 
     private fun initObserver() {
@@ -194,5 +241,35 @@ class MainActivity : AppCompatActivity() {
                 appUpdater.stop()
             }
         })
+    }
+
+    private fun startCarmoWindowService(context: Context){
+        serviceToken = CarmoWindowRemote.bindToService(context, object : ServiceConnection {
+                override fun onServiceConnected(name: ComponentName, service: IBinder) {
+                    this@MainActivity.onResume()
+
+                }
+
+                override fun onServiceDisconnected(name: ComponentName) {
+                }
+            })
+    }
+
+    override fun onCarmoWindowStateChange(action : String) {
+        viewModel.carmoWindowMoving(binding.tvStations)
+        when(action){
+            CarmoState.CARMO_STATE_CHILD_QUIT -> {
+                binding.tvStations.text = "아이가 하차중입니다. 주의해주세요."
+                binding.tvStations.isSelected = true
+            }
+            CarmoState.CARMO_STATE_PET_IDLE -> {
+                binding.tvStations.text = "주인이 곧 돌아옵니다."
+                binding.tvStations.isSelected = true
+            }
+            CarmoState.CARMO_STATE_QUIT -> {
+                binding.tvStations.text = "하차중인 사람이 있습니다. 주의해주세요."
+                binding.tvStations.isSelected = true
+            }
+        }
     }
 }

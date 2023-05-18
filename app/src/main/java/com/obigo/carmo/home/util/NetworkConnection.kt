@@ -1,4 +1,4 @@
-package com.obigo.carmo.home
+package com.obigo.carmo.home.util
 
 import android.annotation.TargetApi
 import android.content.BroadcastReceiver

@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/currentVersion"
-        android:textAlignment="textStart"
-        />
+        android:textAlignment="textStart" />
 
     <TextView
         android:layout_marginStart="5dp"
@@ -21,7 +20,7 @@
         android:layout_below="@id/currentVersion"
         android:textAlignment="textStart"
         android:text="@string/defaultRecentVersion"
-        />
+        android:singleLine="false"/>
 
     <View
         android:layout_width="match_parent"
@@ -33,8 +32,7 @@
         android:id="@+id/hidden_setting_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        />
+        android:layout_alignParentEnd="true" />
 
     <Spinner
         android:id="@+id/spinner_animations"
@@ -43,18 +41,51 @@
         android:spinnerMode="dropdown"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="30dp"
-        android:layout_below="@+id/hidden_setting_view"
-        />
-
+        android:layout_below="@+id/hidden_setting_view" />
+    
     <TextView
         android:id="@+id/tv_stations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:textSize="200sp"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:singleLine="true"/>
+        android:maxLines="1"
+        android:textSize="50sp" />
+
+    <LinearLayout
+        android:layout_marginTop="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/lin_carmo_btns">
+
+        <Button
+            android:id="@+id/btn_child_quit"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:text="아이 하차"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btn_pet_idle"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:text="반려동물"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btn_quit"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:text="하차"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </RelativeLayout>
