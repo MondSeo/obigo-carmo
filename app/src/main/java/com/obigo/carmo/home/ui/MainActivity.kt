@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), CarmoWindowStateNotifier {
     private fun initViews() {
         binding.currentVersion.text = "현재 버전 : ${BuildConfig.VERSION_NAME}"
         viewModel.appUpdaterUtils.start()
-        viewModel.initData()
+        viewModel.initStationData()
         binding.tvStations.isSelected = true
 
         /**
@@ -220,7 +220,7 @@ class MainActivity : AppCompatActivity(), CarmoWindowStateNotifier {
                 val intent = Intent(Intent.ACTION_MAIN)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 intent.component = viewModel.componentName
-                intent.putExtra("url",viewModel.url)
+                intent.putExtra("url",viewModel.updateUrl)
                 intent.putExtra("version",viewModel.latestVersion)
                 startActivity(intent)
                 moveTaskToBack(true)					// 태스크를 백그라운드로 이동
@@ -263,12 +263,15 @@ class MainActivity : AppCompatActivity(), CarmoWindowStateNotifier {
                 binding.tvStations.isSelected = true
             }
             CarmoState.CARMO_STATE_PET_IDLE -> {
-                binding.tvStations.text = "주인이 곧 돌아옵니다."
+                binding.tvStations.text = "주인이 곧 돌아옵니다. 현재 온도 %s°C"
                 binding.tvStations.isSelected = true
             }
             CarmoState.CARMO_STATE_QUIT -> {
                 binding.tvStations.text = "하차중인 사람이 있습니다. 주의해주세요."
                 binding.tvStations.isSelected = true
+            }
+            CarmoState.CARMO_STATE_GUIDE_DESTINATION -> {
+                binding.tvStations.text = "다음 목적지는 ${viewModel.currentStation}"
             }
         }
     }

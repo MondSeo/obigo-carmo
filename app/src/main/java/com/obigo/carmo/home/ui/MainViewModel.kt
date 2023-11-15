@@ -20,9 +20,6 @@ import java.util.*
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     @SuppressLint("StaticFieldLeak")
 
-    /**
-     * 컨텍스트
-     */
     private val context = getApplication<Application>().applicationContext
 
     /**
@@ -37,9 +34,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _currentStation = MutableLiveData<String>()
     val currentStation : LiveData<String> get() = _currentStation
 
+    /**
+     * 현재 온도 LiveData
+     */
+    private val _currentTemperature = MutableLiveData<Float>()
+    val currentTemperature : LiveData<Float> = _currentTemperature
 
-
-
+    /**
+     * 타이머
+     */
     private var timer = Timer()
 
     /**
@@ -63,20 +66,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var selectedAnimation : Int = 0
 
     /**
-     * url 전역객체 초기화
+     * 업데이트 시 다운로드 받을 URL
      */
-    var url: String = ""
+    var updateUrl: String = ""
 
     /**
-     * 최신 버전 전역객체 초기화
+     * 최신 버전
      */
     var latestVersion : String = ""
 
     /**
      * 이동할 앱의 패키지 명
      */
-    val componentName: ComponentName =
-        ComponentName("com.obigo.carmoupdater", "com.obigo.carmoupdater.MainActivity")
+    val componentName: ComponentName = ComponentName("com.obigo.carmoupdater", "com.obigo.carmoupdater.MainActivity")
+
+    init {
+        _currentTemperature.value = 20.0F
+    }
 
     /**
      * AppUpdater 라이브러리의 유틸 클래스
@@ -88,9 +94,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             override fun onSuccess(update: Update?, isUpdateAvailable: Boolean?) {
                 Log.d("Latest Version", update?.latestVersion.toString())
                 _recentVersion.value = "최신 버전 : ${update?.latestVersion}"
-                url = "https://github.com/MondSeo/obigo-carmo/releases/download/v${update?.latestVersion}/Carmo_v${update?.latestVersion}.apk"
+                updateUrl = "https://github.com/MondSeo/obigo-carmo/releases/download/v${update?.latestVersion}/Carmo_v${update?.latestVersion}.apk"
                 latestVersion = update?.latestVersion.toString()
-                Log.d("Latest Version", url)
+                Log.d("Latest Version", updateUrl)
             }
 
             override fun onFailed(error: AppUpdaterError?) {
@@ -99,13 +105,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         })
 
-
-
-
     /**
      * 가공 데이터
      */
-    fun initData(){
+    fun initStationData(){
         station.apply {
             station.add("버스 정류장1")
             station.add("버스 정류장2")
